@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ .Values.deployment.name }}
+spec:
+  replicas: {{ .Values.deployment.replica }}
+  serviceName: {{ .Values.service.headlessName }}
+  selector:
+    matchLabels:
+      app: {{ .Values.deployment.labels }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.deployment.labels }}
+    spec:
+      terminationGracePeriodSeconds: 10
+      containers:
+        - name: {{ .Values.deployment.name }}
+          image: {{ .Values.deployment.image }}:{{ .Values.deployment.tag}}
+          ports:
+            - name: {{ .Values.deployment.name }}
+              protocol: {{ .Values.service.protocol }}
+              containerPort: {{ .Values.service.port }}
+          envFrom:
+            - secretRef:
+                name: {{ .Values.deployment.name}}
+          volumeMounts:
+            - name: {{ .Values.deployment.name }}
+              mountPath: {{ .Values.pvc.mountPath }}
+  volumeClaimTemplates:
+  - metadata:
+      name: {{ .Values.deployment.name }}
+    spec:
+      storageClassName: manual
+      accessModes: ["ReadWriteOnce"]
+      resources:
+        requests:
+          storage: 3Gi
+      selector:
+        matchLabels:
+          type: local

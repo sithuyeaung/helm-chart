@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Values.service.headlessName }}
+  labels:
+    app: {{ .Values.deployment.labels }}
+spec:
+  ports:
+  - port: {{ .Values.service.port }}
+    name: {{ .Values.deployment.name }}
+  clusterIP: None
+  selector:
+    app: {{ .Values.deployment.labels }}

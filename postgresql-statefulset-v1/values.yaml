@@ -1,0 +1,27 @@
+deployment:
+  name: postgresql-db
+  replica: 1
+  labels: postgresql-db
+  data:  /data/pgdata
+  image: postgres
+  tag: "latest"
+
+secret: 
+  POSTGRES_PASSWORD: rootonly
+  POSTGRES_USER: dbadmin
+  POSTGRES_DB: keycloakdb
+
+service:
+  svcName: postgresql-svc
+  headlessName: postgresql-headless-svc
+  port: 5432
+  type: NodePort
+  protocol: TCP
+  
+pv:
+  storage: 10Gi
+  path: /mnt/postgresql-db
+
+pvc: 
+  storage: 5Gi
+  mountPath: /var/lib/postgresql/data

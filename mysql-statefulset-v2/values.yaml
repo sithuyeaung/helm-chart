@@ -1,0 +1,28 @@
+deployment:
+  name: mysql-db
+  replica: 1
+  labels: mysql-db
+  image: mysql 
+  tag: "latest"
+
+secret: 
+  MYSQL_DATABASE: keycloak
+  MYSQL_USER: keycloak
+  MYSQL_PASSWORD: password
+  MYSQL_ROOT_PASSWORD: root_password
+
+
+service:
+  svcName: mysqldb-svc
+  headlessName: mysqldb-headless-svc
+  port: 3306
+  type: NodePort
+  protocol: TCP
+  
+pv:
+  storage: 5Gi
+  path: /mnt/mysql
+
+pvc: 
+  storage: 3Gi
+  mountPath: /var/lib/mysql

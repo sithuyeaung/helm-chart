@@ -1,0 +1,20 @@
+deployment:
+  name: keycloak
+  replica: 1
+  image: quay.io/keycloak/keycloak
+  tag: 15.1.0
+
+secret: 
+  KEYCLOAK_USER: adminonly
+  KEYCLOAK_PASSWORD: adminonly
+  DB_VENDOR: postgres
+  DB_ADDR: postgres-db-lb
+  DB_DATABASE: postgresql-svc.postgresql.svc.cluster.local
+  DB_USER: keycloakuser
+  DB_SCHEMA: public
+  DB_PASSWORD: keycloakpassword
+
+
+service:
+  name: keycloak-svc
+  type: LoadBalancer

@@ -1,0 +1,52 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ .Values.deployment.name }}
+  labels:
+    app: {{ .Values.deployment.name }}
+spec:
+  replicas: {{ .Values.deployment.replica }}
+  selector:
+    matchLabels:
+      app: {{ .Values.deployment.name }}
+  template:
+    metadata:
+      labels:
+        app: {{ .Values.deployment.name }}
+    spec:
+      containers:
+      - name: {{ .Values.deployment.name }}
+        resources: {}
+        image: {{ .Values.deployment.image }}:{{ .Values.deployment.tag }}
+        env:
+        - name: CACHE_OWNERS_AUTH_SESSIONS_COUNT
+          value: "1"
+        - name: CACHE_OWNERS_COUNT
+          value: "1"
+        - name: DB_ADDR
+          value: 192.168.118.68
+        - name: DB_DATABASE
+          value: keycloak
+        - name: DB_PASSWORD
+          value: root_password
+        - name: DB_SCHEMA
+          value: public
+        - name: DB_USER
+          value: root
+        - name: DB_VENDOR
+          value: MYSQL
+        - name: JGROUPS_DISCOVERY_PROPERTIES
+          value: dns_query=keycloak
+        - name: JGROUPS_DISCOVERY_PROTOCOL
+          value: dns.DNS_PING
+        - name: KEYCLOAK_PASSWORD
+          value: admin
+        - name: KEYCLOAK_USER
+          value: admin
+        - name: PROXY_ADDRESS_FORWARDING
+          value: "true"
+        ports:
+        - name: {{ .Values.deployment.name }}-http
+          containerPort: 8080
+        - name: {{ .Values.deployment.name }}-https
+          containerPort: 8443
